@@ -1,0 +1,70 @@
+class DDT_Etiqueta
+{
+    
+    const DDT_ETIQUETA_ID = 'ddt-etiqueta-producto';
+    
+    public function __construct()
+    {
+        add_action('woocommerce_product_options_general_product_data', array($this, 'ddt_createEtiqueta'));
+        add_action('woocommerce_process_product_meta', array($this, 'ddt_saveEtiqueta'));
+        add_action('woocommerce_before_shop_loop_item_title', array($this, 'ddt_etiquetaProductoTienda'));
+        add_filter('woocommerce_single_product_image_thumbnail_html', array($this, 'ddt_etiquetaProducto'));
+    }
+
+    function ddt_createEtiqueta()
+    {
+        $args = array(
+            'id' => self::DDT_ETIQUETA_ID,
+            'label' => __('Etiqueta producto', 'ddt'),
+            'class' => 'ddt-etiqueta',
+            'desc-top' => true,
+            'description' => 'Etiqueta para presentar en el producto'
+        );
+        woocommerce_wp_text_input($args);
+    }
+
+    function ddt_saveEtiqueta($post_id)
+    {
+        $product = wc_get_product($post_id);
+        $etiqueta = filter_has_var(INPUT_POST, self::DDT_ETIQUETA_ID) ?
+                filter_input(INPUT_POST, self::DDT_ETIQUETA_ID, FILTER_SANITIZE_STRING) :
+                null;
+        $product->update_meta_data(self::DDT_ETIQUETA_ID, $etiqueta);
+        $product->save();
+    }
+
+    function ddt_etiquetaProductoTienda()
+    {
+        /* @var $product WC_Product */
+        global $product;
+
+        $etiqueta = $this->getEtiqueta($product);
+        if (null === $etiqueta) {
+            return;
+        }
+        echo '<span class="ddt-etiqueta-tienda">' . $etiqueta . '</span>';
+    }
+
+    function ddt_etiquetaProducto($output)
+    {
+        /* @var $product WC_Product */
+        global $product;
+
+        $etiqueta = $this->getEtiqueta($product);
+        $output .= '<span class="ddt-etiqueta-tienda">' . $etiqueta . '</span>';
+
+        return $output;
+    }
+
+    protected function getEtiqueta($product)
+    {
+        $etiqueta = $product->get_meta(self::DDT_ETIQUETA_ID);
+
+        return $etiqueta;
+    }
+
+}
+
+add_action('plugins_loaded', function() {
+    new DDT_Etiqueta();
+});
