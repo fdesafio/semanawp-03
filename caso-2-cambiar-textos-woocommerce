@@ -1,0 +1,23 @@
+/**
+ * Cambio de textos en WooCommerce/WordPress
+ *
+ * @link http://codex.wordpress.org/Plugin_API/Filter_Reference/gettext
+ */
+function dd_mi_traduccion( $translated_text, $text, $domain ) {
+	switch ( $translated_text ) {
+		case 'Productos relacionados' :
+			$translated_text = __( 'También te puede interesar');
+			break;
+		case 'Añadir al carrito' :
+			$translated_text = __( 'Comprar' );
+			break;
+		case 'Seleccionar opciones' :
+			$translated_text = __( 'Más' );
+			break;
+		case 'Choose an option' :
+			$translated_text = __( 'Más' );
+			break;
+	}
+	return $translated_text;
+}
+add_filter( 'gettext', 'dd_mi_traduccion', 20, 3 );
