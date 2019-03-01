@@ -1,0 +1,6 @@
+function dd_mi_logo_personalizado() {
+ echo '<style type="text/css">
+  h1 a { background-image:url(https://shop.woocommercefacil.com/wp-content/uploads/sites/3/2018/09/woo-favion-woocommercefacil-2018.png)!important; }
+       </style>';
+}
+add_action('login_head', 'dd_mi_logo_personalizado');
