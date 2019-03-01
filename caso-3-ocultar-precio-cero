@@ -1,0 +1,14 @@
+/**
+ * Oculta precios de WooCommerce en la página de tienda y producto
+*/
+add_filter( 'woocommerce_variable_price_html', 'dd_eliminar_precio_cero', 10, 2 );
+add_filter( 'woocommerce_get_price_html', 'dd_eliminar_precio_cero', 10, 2 );
+add_filter( 'woocommerce_template_single_price', 'dd_eliminar_precio_cero', 10, 2 );
+ 
+function dd_eliminar_precio_cero( $price, $product ) {
+  if ((float)$product->price == 0) { // float devuelve un valor numérico
+	$price = '';
+	return 'CUPÓN';
+  }
+  return $price;
+}
